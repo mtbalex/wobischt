@@ -23,7 +23,7 @@
  		function getLocation() {
  			console.log("getLocation");
 		    if (navigator.geolocation) {
-		    	  var geo_options = { enableHighAccuracy: false,
+		    	  var geo_options = { enableHighAccuracy: true,
 		    	         	    	    timeout: 15000,
                                   maximumAge: Infinity};
 		        navigator.geolocation.getCurrentPosition(showPosition, error, geo_options);
