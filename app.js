@@ -107,7 +107,8 @@ io.sockets.on('connection', function(socket) {
 	   console.log('got longitude:' + data.longitude);
 
 		var clientLocation = {latitude 	: data.latitude,
-	    		                longitude 	: data.longitude};	 
+     		                longitude 	: data.longitude,	 
+				id_string : data.id_string};
 	    		          
 	    		          
 	   clientLocations[data.fingerprint] = clientLocation;
