@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Testtitle</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="fingerprint.js"></script>
+    
+    <script>
+    	function error(err) {
+  			console.warn('ERROR(' + err.code + '): ' + err.message);
+		};
+    
+ 		function getLocation() {
+ 			console.log("getLocation");
+		    if (navigator.geolocation) {
+		    	  var geo_options = { enableHighAccuracy: false,
+		    	         	    	    timeout: 15000,
+                                  maximumAge: Infinity};
+		        navigator.geolocation.getCurrentPosition(showPosition, error, geo_options);
+		    } else { 
+		        console.log("Geolocation is not supported by this browser.");
+		    }
+		}
+
+		function showPosition(position) {
+		    	console.log("Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
+		    	console.log(position);	
+		    
+		    	 var myLatlng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+			    var mapOptions = {
+			        zoom: 4,
+			        center: myLatlng
+			    };
+			    
+			    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+			    
+			    /*
+             var marker = new google.maps.Marker({
+ 			    	position: new google.maps.LatLng(position.coords.latitude,position.coords.longitude),
+ 			    	map: map,
+ 			    	animation: google.maps.Animation.DROP,
+ 			    	title: "My place"
+ 				 });
+ 				 */
+ 				
+ 				var socket = io.connect();
+	    		console.log("created socket");
+
+				var fingerprint = new Fingerprint().get();
+			   console.log("fingerprint:" + fingerprint);
+				var myGeoObject = {	fingerprint : fingerprint,
+						   				latitude 	: position.coords.latitude,
+	    		         	         longitude 	: position.coords.longitude};	  
+
+	    		//socket.emit('my_coordinates',JSON.stringify(position));
+	    		
+	    		socket.emit('my_coordinates',myGeoObject);
+	    		//socket.emit('my_coordinates',position);
+	    		 
+				socket.on('other_users_location', function (data) {
+        			console.log("created socket");
+        		   console.log('got latitude:' + data.latitude);
+	   			console.log('got longitude:' + data.longitude);
+	   			
+					var marker = new google.maps.Marker({
+ 			    		position: new google.maps.LatLng(data.latitude,data.longitude),
+ 			    		map: map,
+ 			    		animation: google.maps.Animation.DROP,
+ 			    		title: "Someone"
+ 					});
+				});
+		}
+
+
+
+    
+		function initialize() 
+		{
+		console.log("Here I am");
+
+		getLocation();
+		
+		/*
+			navigator.geolocation.getCurrentPosition(function(location) 
+			{
+				console.log("Got location");
+	  			console.log(location.coords.latitude);
+	  			console.log(location.coords.longitude);
+	  			console.log(location.coords.accuracy);
+
+ 				});
+			    
+			});	
+		*/
+
+		}
+		
+		google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>

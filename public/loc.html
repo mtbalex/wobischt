@@ -1,0 +1,105 @@
+<html>
+
+<meta name="robots" content="noindex">
+<head>
+<meta name="viewport" content="width=device-width">
+<title>Get geolocation every second</title>
+<script>
+var getCurrentPositionRequest = 0;
+function getTime() {
+  var now = new Date();
+  var time = '' + now.getUTCHours() + ':';
+  if (now.getUTCMinutes() < 10) time += '0';
+  time += now.getUTCMinutes() + ':';
+  if (now.getUTCSeconds() < 10) time += '0';
+  time += now.getUTCSeconds();
+  //time += ':' + now.getUTCMilliseconds();
+  return time;
+}
+function formatTime(date) {
+  var time = '' + date.getUTCHours() + ':';
+  if (date.getUTCMinutes() < 10) time += '0';
+  time += date.getUTCMinutes() + ':';
+  if (date.getUTCSeconds() < 10) time += '0';
+  time += date.getUTCSeconds();
+  //time += ':' + date.getUTCMilliseconds();
+  return time;
+}
+function display(message) {
+  var div = document.getElementById('consoleDisplay');
+  div.innerHTML = message + div.innerHTML;
+}
+function getCurrentPosition() {
+  var id = getCurrentPositionRequest++;
+  console.log('getCurrentPosition start - request ' + id);
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      console.log('getCurrentPosition success - request ' + id);
+      console.log(position);
+      display('<div>' + id + 'lat: ' + position.coords.latitude + ' long: ' + position.coords.longitude + ' (received: ' + getTime() + ') (timestamp: ' + formatTime(new Date(position.timestamp)) + ') success</div>');
+    },
+    function(error) {
+      console.log('getCurrentPosition error - request ' + id);
+      console.log(error);
+      display('<div>' + id + ' ' + getTime() + ' ' + error.message + '</div>');
+  
+    },
+    {
+      timeout: 5000 + id,
+      maximumAge: Infinity,
+      enableHighAccuracy: true
+    }
+  );
+}
+setInterval(getCurrentPosition, 1000);
+</script>
+
+<style id="jsbin-css">
+html {
+  margin: 0;
+  padding: 0;
+}
+body {
+  margin: 0;
+  padding: 5px;
+}
+*,
+body,
+button {
+  font-family: Inconsolata,monospace;
+  font-size: 10px;
+  line-height: 1.3;
+}
+h1 {
+  font-size: 14px;
+  margin: 0 0 0.5em 0;
+  padding: 0;
+}
+button {
+  margin: 1em;
+  padding: 1em;
+}
+
+</style>
+</head>
+<body>
+  <h1>Get geolocation every second</h1>
+  <div id="consoleDisplay"></div>
+<script src="http://static.jsbin.com/js/render/edit.js?3.35.12"></script>
+<script>jsbinShowEdit && jsbinShowEdit({"static":"http://static.jsbin.com","root":"http://jsbin.com"});</script>
+
+<script>
+/*
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-1656750-34', 'jsbin.com');
+ga('require', 'linkid', 'linkid.js');
+ga('require', 'displayfeatures');
+ga('send', 'pageview');
+*/
+</script>
+
+</body>
+</html>
