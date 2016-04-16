@@ -106,20 +106,19 @@ io.sockets.on('connection', function(socket) {
 	   console.log('got latitude:' + data.latitude);
 	   console.log('got longitude:' + data.longitude);
 
-		var clientLocation = {latitude 	: data.latitude,
+	   var clientLocation = {latitude 	: data.latitude,
      		                longitude 	: data.longitude,	 
-				id_string : data.id_string};
+				id_string 	: data.id_string};
 	    		          
 	    		          
 	   clientLocations[data.fingerprint] = clientLocation;
-	   console.log(clientLocations);
+	   console.log("All clients: " + clientLocations);
 	   
-	   for(var aClientLocation in clientLocations){
-	   	console.log(aClientLocation);
-    		console.log('Found client lat:' + clientLocations[aClientLocation].latitude);
-	   	console.log('Found client long:' + clientLocations[aClientLocation].longitude);
+	   for(var aClientLocation in clientLocations)
+	   {
+	   	console.log("Found client" + aClientLocation);
 	   	io.sockets.emit('other_users_location', clientLocations[aClientLocation]);
-		}
+	   }
 	   
 	   io.sockets.emit('other_users_location', data);
 	});
