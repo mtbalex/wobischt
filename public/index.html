@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <title>Frienfinder</title>
+    <title>Friendfinder</title>
     <style>
       html, body, #map-canvas {
         height: 100%;
@@ -32,8 +32,12 @@
 		    }
 		}
 
-		var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		var labelIndex = 0;
+		var markerIcons = [ "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+				    "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+				    "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+				    "http://maps.google.com/mapfiles/ms/icons/purple-dot.png",
+				    "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"]
+		var markerIndex = 0;
 
 		function showPosition(position) {
 		    	console.log("Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
@@ -81,7 +85,7 @@
  			    		map: map,
  			    		animation: google.maps.Animation.DROP,
  			    		title: data.id_string,
-					label: labels[labelIndex++ % labels.length]
+					icon: markerIcons[markerIndex++ % (markerIcons.length)]
  					});
 				});
 		}
