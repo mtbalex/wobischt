@@ -76,9 +76,10 @@
 	    		//socket.emit('my_coordinates',position);
 	    		 
 				socket.on('other_users_location', function (data) {
-        			console.log("created socket");
-        		   console.log('got latitude:' + data.latitude);
-	   			console.log('got longitude:' + data.longitude);
+					console.log("created socket");
+					console.log('got latitude:' + data.latitude);
+					console.log('got longitude:' + data.longitude);
+					console.log("markerIndex:" + markerIndex);
 	   			
 					var marker = new google.maps.Marker({
  			    		position: new google.maps.LatLng(data.latitude,data.longitude),
