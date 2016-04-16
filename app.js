@@ -97,7 +97,7 @@ io.sockets.on('connection', function(socket) {
 	}); 
 	
 	socket.on('my_coordinates', function(data)
-   { 	
+	{ 	
 	   console.log('got coordinates' + data);
 	   	   
 	   //console.log(JSON.parse(data));
@@ -119,8 +119,6 @@ io.sockets.on('connection', function(socket) {
 	   	console.log("Found client" + aClientLocation);
 	   	io.sockets.emit('other_users_location', clientLocations[aClientLocation]);
 	   }
-	   
-	   io.sockets.emit('other_users_location', data);
 	});
 });
 
