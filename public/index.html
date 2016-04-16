@@ -80,6 +80,10 @@
 					console.log('got latitude:' + data.latitude);
 					console.log('got longitude:' + data.longitude);
 					console.log("markerIndex:" + markerIndex);
+
+					var infowindow = new google.maps.InfoWindow({
+					    content: data.id_string
+				    	});
 	   			
 					var marker = new google.maps.Marker({
  			    		position: new google.maps.LatLng(data.latitude,data.longitude),
@@ -88,6 +92,10 @@
  			    		title: data.id_string,
 					icon: markerIcons[markerIndex++ % (markerIcons.length)]
  					});
+
+					marker.addListener('click', function() {
+					  infowindow.open(map, marker);
+					});
 				});
 		}
 
