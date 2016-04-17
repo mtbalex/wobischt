@@ -17,7 +17,6 @@
     
     <script>
     	function error(err) {
-  			console.warn('ERROR(' + err.code + '): ' + err.message);
 			alert('Attempt to get location failed: ' + err.message);
 		};
     
@@ -29,7 +28,6 @@
                                   maximumAge: 0};
 		        navigator.geolocation.getCurrentPosition(showPosition, error, geo_options);
 		    } else { 
-		        console.log("Geolocation is not supported by this browser.");
 		        alert("Geolocation is not supported by this browser.");
 		    }
 		}
@@ -92,7 +90,8 @@
  			    		map: map,
  			    		animation: google.maps.Animation.DROP,
  			    		title: data.id_string,
-					icon: markerIcons[markerIndex++ % (markerIcons.length)]
+					icon: markerIcons[data.fingerprint++ % (markerIcons.length)]
+					//icon: markerIcons[markerIndex++ % (markerIcons.length)]
  					});
 
 					marker.addListener('click', function() {
