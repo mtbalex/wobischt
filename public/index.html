@@ -83,11 +83,14 @@
 					console.log('got longitude:' + data.longitude);
 					console.log('got fingerprint:' + data.fingerprint);
 					//console.log("markerIndex:" + markerIndex);
-
-					var infowindow = new google.maps.InfoWindow({
-					    content: data.id_string
-				    	});
 	   			
+					//If that fingerprint already had a marker remove it from the map
+					if (markers[data.fingerprint] !== undefined)
+					{
+					    console.log('deleting marker');
+					    markers[data.fingerprint].setMap(null);
+					}
+
 					var marker = new google.maps.Marker({
  			    		position: new google.maps.LatLng(data.latitude,data.longitude),
  			    		map: map,
@@ -97,17 +100,18 @@
 					//icon: markerIcons[markerIndex++ % (markerIcons.length)]
  					});
 
-					if (markers[data.fingerprint] !== undefined)
-					{
-					    console.log('deleting marker');
-					    markers[data.fingerprint].setMap(null);
-					}
+					var infowindow = new google.maps.InfoWindow({
+					    content: data.id_string
+				    	});
+
+					marker.addListener('click', function() {
+					    infowindow.open(map, marker);
+					});
+
+					//Add marker as property
 					markers[data.fingerprint] = marker;
 
 
-					marker.addListener('click', function() {
-					  infowindow.open(map, marker);
-					});
 				});
 		}
 
