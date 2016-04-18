@@ -80,7 +80,7 @@
 					console.log('got latitude:' + data.latitude);
 					console.log('got longitude:' + data.longitude);
 					console.log('got fingerprint:' + data.fingerprint);
-					console.log("markerIndex:" + markerIndex);
+					//console.log("markerIndex:" + markerIndex);
 
 					var infowindow = new google.maps.InfoWindow({
 					    content: data.id_string
@@ -91,7 +91,7 @@
  			    		map: map,
  			    		animation: google.maps.Animation.DROP,
  			    		title: data.id_string,
-					icon: markerIcons[data.fingerprint++ % (markerIcons.length)]
+					icon: markerIcons[data.fingerprint % (markerIcons.length)]
 					//icon: markerIcons[markerIndex++ % (markerIcons.length)]
  					});
 
