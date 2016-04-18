@@ -71,54 +71,51 @@ var clientLocations = {};
 io.sockets.on('connection', function(socket) {
 
 	console.log("connection");
-   socket.on('query', function(data)
-   { 
+	socket.on('query', function(data) { 
 		console.log('got query data' + data);
 
-	   http.get(
-	   {
-	           host: 'www.citibikenyc.com',
-	           path: '/stations/json'
-	   }, function(response) 
-	   {
-	   	// Continuously update stream with data
-	      var body = '';
-	      response.on('data', function(d) 
-	      {
-	      	body += d;
-	      });
-	      response.on('end', function() 
-	      {
-	      	// Data reception is done, do whatever with it!
-	         //var parsed = JSON.parse(body);
+		http.get( {
+			host: 'www.citibikenyc.com',
+			path: '/stations/json'
+		}, function(response) 
+		{
+			// Continuously update stream with data
+			var body = '';
+			response.on('data', function(d) {
+				body += d;
+			});
+			response.on('end', function() {
+				// Data reception is done, do whatever with it!
+				//var parsed = JSON.parse(body);
 				socket.emit('answer', body);
-	      });
-	   });
+			});
+		});
 	}); 
-	
-	socket.on('my_coordinates', function(data)
-	{ 	
-	   console.log('got coordinates' + data);
-	   	   
-	   //console.log(JSON.parse(data));
-	   //var loc = JSON.parse(data);
-	   console.log('got fingerprint:' + data.fingerprint);
-	   console.log('got latitude:' + data.latitude);
-	   console.log('got longitude:' + data.longitude);
 
-	   var clientLocation = {latitude 	: data.latitude,
-     		                longitude 	: data.longitude,	 
+	socket.on('my_coordinates', function(data) { 	
+		console.log('got data' + data);
+		console.log('got fingerprint:' + data.fingerprint);
+		console.log('got latitude:' + data.latitude);
+		console.log('got longitude:' + data.longitude);
+
+		var clientLocation = {
+				latitude 	: data.latitude,
+				longitude 	: data.longitude,	 
 				id_string 	: data.id_string,
-				fingerprint 	: data.fingerprint};
-	    		          
-	   clientLocations[data.fingerprint] = clientLocation;
-	   console.log("All clients: " + clientLocations);
-	   
-	   for(var aClientLocation in clientLocations)
-	   {
-	   	console.log("Found client" + aClientLocation);
-	   	io.sockets.emit('other_users_location', clientLocations[aClientLocation]);
-	   }
+				fingerprint : data.fingerprint};
+		
+		//Send new client location to all registered clients
+		io.sockets.emit('other_users_location', clientLocation);
+
+		//Send all existing client locations to the new client
+		for (var aClientLocation in clientLocations)
+		{
+			socket.emit('other_users_location', clientLocations[aClientLocation]);
+		}
+		
+		//Update data with new client
+		clientLocations[data.fingerprint] = clientLocation;
+		console.log("All clients: " + clientLocations);
 	});
 });
 
