@@ -39,6 +39,8 @@
 				    "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"]
 		var markerIndex = 0;
 
+		var markers = {};
+
 		function showPosition(position) {
 		    	console.log("Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
 		    	console.log(position);	
@@ -94,6 +96,14 @@
 					icon: markerIcons[data.fingerprint % (markerIcons.length)]
 					//icon: markerIcons[markerIndex++ % (markerIcons.length)]
  					});
+
+					if (markers[data.fingerprint] !== undefined)
+					{
+					    console.log('deleting marker');
+					    markers[data.fingerprint].map == null;
+					}
+					markers[data.fingerprint] = marker;
+
 
 					marker.addListener('click', function() {
 					  infowindow.open(map, marker);
