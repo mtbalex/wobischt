@@ -20,109 +20,85 @@
 			alert('Attempt to get location failed: ' + err.message);
 		};
     
- 		function getLocation() {
- 			console.log("getLocation");
-		    if (navigator.geolocation) {
-		    	  var geo_options = { enableHighAccuracy: true,
-		    	         	    	    timeout: 15000,
-                                  maximumAge: 0};
-		        navigator.geolocation.getCurrentPosition(showPosition, error, geo_options);
-		    } else { 
-		        alert("Geolocation is not supported by this browser.");
-		    }
+		function getLocation() {
+			console.log("getLocation");
+			if (navigator.geolocation) {
+				var geo_options = { 
+						enableHighAccuracy: true,
+						timeout: 30000,
+						maximumAge: 0};
+				navigator.geolocation.getCurrentPosition(showPosition, error, geo_options);
+			} else { 
+				alert("Geolocation is not supported by this browser.");
+			}
 		}
 
-		var markerIcons = [ "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-				    "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
-				    "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-				    "http://maps.google.com/mapfiles/ms/icons/purple-dot.png",
-				    "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"]
+ 		var markerIcons = [ "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+ 		                    "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+ 		                    "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+ 		                    "http://maps.google.com/mapfiles/ms/icons/purple-dot.png",
+ 		                    "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"]
 		var markerIndex = 0;
 
 		function showPosition(position) {
-		    	console.log("Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
-		    	console.log(position);	
-		    
-		    	 var myLatlng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-			    var mapOptions = {
-			        zoom: 12,
-			        center: myLatlng
-			    };
-			    
-			    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-			    
-			    /*
-             var marker = new google.maps.Marker({
- 			    	position: new google.maps.LatLng(position.coords.latitude,position.coords.longitude),
- 			    	map: map,
- 			    	animation: google.maps.Animation.DROP,
- 			    	title: "My place"
- 				 });
- 				 */
- 				
- 				var socket = io.connect();
-	    		console.log("created socket");
+			console.log("Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
+			console.log(position);	
 
-				var fingerprint = new Fingerprint().get();
-			   console.log("fingerprint:" + fingerprint);
-				var myGeoObject = {	fingerprint : fingerprint,
-						  	latitude    : position.coords.latitude,
-	    		         	                longitude   : position.coords.longitude,
-	    		         	                id_string   : navigator.userAgent};	  
+			var myLatlng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+			var mapOptions = {
+					zoom: 12,
+					center: myLatlng
+			};
 
-	    		//socket.emit('my_coordinates',JSON.stringify(position));
-	    		
-	    		socket.emit('my_coordinates',myGeoObject);
-	    		//socket.emit('my_coordinates',position);
-	    		 
-				socket.on('other_users_location', function (data) {
-					console.log("got other users location");
-					console.log('got latitude:' + data.latitude);
-					console.log('got longitude:' + data.longitude);
-					console.log('got fingerprint:' + data.fingerprint);
-					//console.log("markerIndex:" + markerIndex);
+			var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-					var infowindow = new google.maps.InfoWindow({
-					    content: data.id_string
-				    	});
-	   			
-					var marker = new google.maps.Marker({
- 			    		position: new google.maps.LatLng(data.latitude,data.longitude),
- 			    		map: map,
- 			    		animation: google.maps.Animation.DROP,
- 			    		title: data.id_string,
-					icon: markerIcons[data.fingerprint % (markerIcons.length)]
-					//icon: markerIcons[markerIndex++ % (markerIcons.length)]
- 					});
+			var socket = io.connect();
+			var fingerprint = new Fingerprint().get();
+			console.log("fingerprint:" + fingerprint);
+			
+			//Wrap coordinates into new javascript object. Sending the position
+			//object does not work from mobile
+			var myGeoObject = {
+					fingerprint : fingerprint,
+					latitude    : position.coords.latitude,
+					longitude   : position.coords.longitude,
+					id_string   : navigator.userAgent};	  
 
-					marker.addListener('click', function() {
-					  infowindow.open(map, marker);
-					});
+			//Send this clients coordinates
+			socket.emit('my_coordinates',myGeoObject);
+
+			socket.on('other_users_location', function (data) {
+				console.log("got other users location");
+				console.log('got latitude:' + data.latitude);
+				console.log('got longitude:' + data.longitude);
+				console.log('got fingerprint:' + data.fingerprint);
+				//console.log("markerIndex:" + markerIndex);
+
+				var infowindow = new google.maps.InfoWindow({
+					content: data.id_string
 				});
+
+				var marker = new google.maps.Marker({
+					position: new google.maps.LatLng(data.latitude,data.longitude),
+					map: map,
+					animation: google.maps.Animation.DROP,
+					title: data.id_string,
+					icon: markerIcons[data.fingerprint % (markerIcons.length)]
+				//icon: markerIcons[markerIndex++ % (markerIcons.length)]
+				});
+				
+		        //marker.setMap(null);
+
+				marker.addListener('click', function() {
+					infowindow.open(map, marker);
+				});
+			});
 		}
-
-
-
     
 		function initialize() 
 		{
-		console.log("Here I am");
-
-		getLocation();
-		
-		/*
-			navigator.geolocation.getCurrentPosition(function(location) 
-			{
-				console.log("Got location");
-	  			console.log(location.coords.latitude);
-	  			console.log(location.coords.longitude);
-	  			console.log(location.coords.accuracy);
-
- 				});
-			    
-			});	
-		*/
-
+			console.log("Here I am");
+			getLocation();
 		}
 		
 		google.maps.event.addDomListener(window, 'load', initialize);
