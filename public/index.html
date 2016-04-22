@@ -69,6 +69,9 @@
 			//Send this clients coordinates
 			socket.emit('my_coordinates',myGeoObject);
 
+			
+			
+			//Received location of other user
 			socket.on('other_users_location', function (data) {
 				console.log("got other users location");
 				console.log('got latitude:' + data.latitude);
@@ -93,16 +96,17 @@
 
 				var infowindow = new google.maps.InfoWindow( {
 					content: data.id_string
-
-					marker.addListener('click', function() {
-						infowindow.open(map, marker);
-					});
-
-					//Add marker as property
-					markers[data.fingerprint] = marker;
 				});
+
+				marker.addListener('click', function() {
+					infowindow.open(map, marker);
+				});
+
+				//Add marker to 
+				markers[data.fingerprint] = marker;
 			});
 		}
+		
     
 		function initialize() 
 		{
