@@ -40,6 +40,8 @@
  		                    "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"]
 		var markerIndex = 0;
 
+		var markers = {};
+
 		function showPosition(position) {
 			console.log("Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
 			console.log(position);	
@@ -55,7 +57,7 @@
 			var socket = io.connect();
 			var fingerprint = new Fingerprint().get();
 			console.log("fingerprint:" + fingerprint);
-			
+
 			//Wrap coordinates into new javascript object. Sending the position
 			//object does not work from mobile
 			var myGeoObject = {
@@ -74,23 +76,30 @@
 				console.log('got fingerprint:' + data.fingerprint);
 				//console.log("markerIndex:" + markerIndex);
 
-				var infowindow = new google.maps.InfoWindow({
-					content: data.id_string
-				});
+				//If that fingerprint already had a marker remove it from the map
+				if (markers[data.fingerprint] !== undefined)
+				{
+					console.log('deleting marker' + markers[data.fingerprint]);
+					markers[data.fingerprint].setMap(null);
+				}
 
-				var marker = new google.maps.Marker({
+				var marker = new google.maps.Marker( {
 					position: new google.maps.LatLng(data.latitude,data.longitude),
 					map: map,
 					animation: google.maps.Animation.DROP,
 					title: data.id_string,
 					icon: markerIcons[data.fingerprint % (markerIcons.length)]
-				//icon: markerIcons[markerIndex++ % (markerIcons.length)]
 				});
-				
-		        //marker.setMap(null);
 
-				marker.addListener('click', function() {
-					infowindow.open(map, marker);
+				var infowindow = new google.maps.InfoWindow( {
+					content: data.id_string
+
+					marker.addListener('click', function() {
+						infowindow.open(map, marker);
+					});
+
+					//Add marker as property
+					markers[data.fingerprint] = marker;
 				});
 			});
 		}
