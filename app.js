@@ -111,7 +111,7 @@ io.sockets.on('connection', function(socket) {
 		for (var aClientLocation in clientLocations)
 		{
 			console.log('Found a client location' + aClientLocation);
-			if (clientLocations.fingerprint != clientLocations[aClientLocation].fingerprint)
+			if (clientLocation.fingerprint != clientLocations[aClientLocation].fingerprint)
 			{
 			    console.log('It is a different client');
 			    socket.emit('other_users_location', clientLocations[aClientLocation]);
