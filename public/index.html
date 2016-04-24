@@ -69,7 +69,7 @@
 		function showPosition(position) {
 			console.log("showPosition: Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
 			//Center map on current position
-			var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.lotitude);
+			var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 			map.setCenter(latLng);
 
 			//Wrap coordinates into new javascript object. Sending the position
@@ -130,7 +130,7 @@
 		    listenToOthersLocations();
 
 		    //Get location each 10s
-		    setInterval(getLocation(),10000);
+		    setInterval(getLocation,10000);
 		}
 		
 		google.maps.event.addDomListener(window, 'load', initialize);
