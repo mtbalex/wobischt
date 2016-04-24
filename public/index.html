@@ -16,7 +16,34 @@
     <script src="fingerprint.js"></script>
     
     <script>
-    	function error(err) {
+		var markerIcons = [ "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+ 		                    "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+ 		                    "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+ 		                    "http://maps.google.com/mapfiles/ms/icons/purple-dot.png",
+ 		                    "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"]
+		var markerIndex = 0;
+		var markers = {};
+
+		function initializeMap()
+		{
+		    console.log("initializeMap");
+		    var mapOptions = {
+			zoom: 12
+			//center: myLatlng
+		    };
+
+		 //   var myLatlng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+		//	map.setCenter(myLatlng);
+
+		    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+		    var socket = io.connect();
+		    var fingerprint = new Fingerprint().get();
+		    console.log("fingerprint:" + fingerprint);
+		}
+
+
+		function error(err) {
 			alert('Attempt to get location failed: ' + err.message);
 		};
     
@@ -26,38 +53,17 @@
 				var geo_options = { 
 						enableHighAccuracy: true,
 						timeout: 30000,
-						maximumAge: 0};
-				navigator.geolocation.getCurrentPosition(showPosition, error, geo_options);
+						maximumAge: 0 };
+			    navigator.geolocation.getCurrentPosition(showPosition, error, geo_options);
 			} else { 
-				alert("Geolocation is not supported by this browser.");
+			    alert("Geolocation is not supported by this browser.");
 			}
 		}
 
- 		var markerIcons = [ "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
- 		                    "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
- 		                    "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
- 		                    "http://maps.google.com/mapfiles/ms/icons/purple-dot.png",
- 		                    "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"]
-		var markerIndex = 0;
 
-		var markers = {};
 
 		function showPosition(position) {
-			console.log("Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
-			console.log(position);	
-
-			var myLatlng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-			var mapOptions = {
-					zoom: 12,
-					center: myLatlng
-			};
-
-			var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-
-			var socket = io.connect();
-			var fingerprint = new Fingerprint().get();
-			console.log("fingerprint:" + fingerprint);
-
+			console.log("showPosition: Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
 			//Wrap coordinates into new javascript object. Sending the position
 			//object does not work from mobile
 			var myGeoObject = {
@@ -68,8 +74,6 @@
 
 			//Send this clients coordinates
 			socket.emit('my_coordinates',myGeoObject);
-
-			
 			
 			//Received location of other user
 			socket.on('other_users_location', function (data) {
@@ -110,8 +114,10 @@
     
 		function initialize() 
 		{
-			console.log("Here I am");
-			getLocation();
+		    initializeMap();
+
+		    //Get location each 10s
+		    setInterval(getLocation(),1000);
 		}
 		
 		google.maps.event.addDomListener(window, 'load', initialize);

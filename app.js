@@ -102,7 +102,7 @@ io.sockets.on('connection', function(socket) {
 				latitude 	: data.latitude,
 				longitude 	: data.longitude,	 
 				id_string 	: data.id_string,
-				fingerprint : data.fingerprint};
+				fingerprint 	: data.fingerprint};
 		
 		//Send new client location to all registered clients
 		io.sockets.emit('other_users_location', clientLocation);
