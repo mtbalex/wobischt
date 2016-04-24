@@ -104,12 +104,13 @@ io.sockets.on('connection', function(socket) {
 				id_string 	: data.id_string,
 				fingerprint 	: data.fingerprint};
 		
-		//Send new client location to all registered clients
+		//Send new client location to all connected sockets
 		io.sockets.emit('other_users_location', clientLocation);
 
 		//Send all existing client locations to the new client
 		for (var aClientLocation in clientLocations)
 		{
+			console.log('Found a client location' + aClientLocation);
 			socket.emit('other_users_location', clientLocations[aClientLocation]);
 		}
 		

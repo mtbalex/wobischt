@@ -130,7 +130,8 @@
 		    listenToOthersLocations();
 
 		    //Get location each 10s
-		    setInterval(getLocation,10000);
+		    //setInterval(getLocation,10000);
+		    getLocation();
 		}
 		
 		google.maps.event.addDomListener(window, 'load', initialize);
