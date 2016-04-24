@@ -24,6 +24,10 @@
 		var markerIndex = 0;
 		var markers = {};
 
+		var fingerprint;
+		var socket;
+		var map;
+
 		function initializeMap()
 		{
 		    console.log("initializeMap");
@@ -35,10 +39,10 @@
 		 //   var myLatlng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
 		//	map.setCenter(myLatlng);
 
-		    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+		    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-		    var socket = io.connect();
-		    var fingerprint = new Fingerprint().get();
+		    socket = io.connect();
+		    fingerprint = new Fingerprint().get();
 		    console.log("fingerprint:" + fingerprint);
 		}
 
