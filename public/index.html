@@ -58,7 +58,7 @@
 			if (navigator.geolocation) {
 				var geo_options = { 
 						enableHighAccuracy: true,
-						timeout: 30000,
+						timeout: 60000,
 						maximumAge: 0 };
 			    navigator.geolocation.getCurrentPosition(showPosition, error, geo_options);
 			} else { 
@@ -130,7 +130,7 @@
 		    listenToOthersLocations();
 
 		    //Get location each 10s
-		    //setInterval(getLocation,10000);
+		    setInterval(getLocation,10000);
 		    getLocation();
 		}
 		
