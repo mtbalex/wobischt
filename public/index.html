@@ -71,7 +71,8 @@
 			console.log("showPosition: Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
 
 			//Only if we have a new location we update it and send it to the server
-			if (position.coords.latitude !== myGeoObject.latitude || 
+			if (	typeof myGeoObject === "undefined" || 
+				position.coords.latitude !== myGeoObject.latitude || 
 				position.coords.longitude !== myGeoObject.longitude) {
 
 			    //Center map on current position
