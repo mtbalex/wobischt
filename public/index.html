@@ -81,6 +81,7 @@
 					fingerprint : fingerprint,
 					latitude    : position.coords.latitude,
 					longitude   : position.coords.longitude,
+					heading	    : position.coords.heading,
 					id_string   : navigator.userAgent};	  
 
 			//Send this clients coordinates
@@ -95,6 +96,7 @@
 			    console.log('got latitude:' + data.latitude);
 			    console.log('got longitude:' + data.longitude);
 			    console.log('got fingerprint:' + data.fingerprint);
+			    console.log('got heading:' + data.heading);
 			    //console.log("markerIndex:" + markerIndex);
 
 			    //If that fingerprint already had a marker remove it from the map

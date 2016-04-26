@@ -97,12 +97,15 @@ io.sockets.on('connection', function(socket) {
 		console.log('got fingerprint:' + data.fingerprint);
 		console.log('got latitude:' + data.latitude);
 		console.log('got longitude:' + data.longitude);
+		console.log('got heading:' + data.heading);
+		
 
 		var clientLocation = {
 				latitude 	: data.latitude,
 				longitude 	: data.longitude,	 
 				id_string 	: data.id_string,
-				fingerprint 	: data.fingerprint};
+				fingerprint 	: data.fingerprint,
+				heading 	: data.heading};
 		
 		//Send new client location to all connected sockets
 		io.sockets.emit('other_users_location', clientLocation);
