@@ -58,7 +58,7 @@
 			if (navigator.geolocation) {
 				var geo_options = { 
 						enableHighAccuracy: true,
-						timeout: 60000,
+						timeout: Infinity,
 						maximumAge: 0 };
 			    navigator.geolocation.getCurrentPosition(showPosition, error, geo_options);
 			} else { 
@@ -89,6 +89,10 @@
 
 			    //Send this clients coordinates
 			    socket.emit('my_coordinates',myGeoObject);
+			}
+			else
+			{
+			    console.log('Location didn't change.')
 			}
 		}
 
