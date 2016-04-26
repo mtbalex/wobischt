@@ -60,7 +60,7 @@
 						enableHighAccuracy: true,
 						timeout: Infinity,
 						maximumAge: 0 };
-			    navigator.geolocation.getCurrentPosition(showPosition, error, geo_options);
+			    navigator.geolocation.watchPosition(showPosition, error, geo_options);
 			} else { 
 			    alert("Geolocation is not supported by this browser.");
 			}
@@ -70,30 +70,20 @@
 		function showPosition(position) {
 			console.log("showPosition: Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
 
-			//Only if we have a new location we update it and send it to the server
-			if (	typeof myGeoObject === "undefined" || 
-				position.coords.latitude !== myGeoObject.latitude || 
-				position.coords.longitude !== myGeoObject.longitude) {
+			//Center map on current position
+			var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+			map.setCenter(latLng);
 
-			    //Center map on current position
-			    var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-			    map.setCenter(latLng);
+			//Wrap coordinates into new javascript object. Sending the position
+			//object does not work from mobile
+			myGeoObject = {
+					fingerprint : fingerprint,
+					latitude    : position.coords.latitude,
+					longitude   : position.coords.longitude,
+					id_string   : navigator.userAgent};	  
 
-			    //Wrap coordinates into new javascript object. Sending the position
-			    //object does not work from mobile
-			    myGeoObject = {
-					    fingerprint : fingerprint,
-					    latitude    : position.coords.latitude,
-					    longitude   : position.coords.longitude,
-					    id_string   : navigator.userAgent};	  
-
-			    //Send this clients coordinates
-			    socket.emit('my_coordinates',myGeoObject);
-			}
-			else
-			{
-			    console.log('Location did not change.')
-			}
+			//Send this clients coordinates
+			socket.emit('my_coordinates',myGeoObject);
 		}
 
 		function listenToOthersLocations() {
@@ -141,8 +131,6 @@
 		    
 		    listenToOthersLocations();
 
-		    //Get location each 10s
-		    setInterval(getLocation,10000);
 		    getLocation();
 		}
 		
