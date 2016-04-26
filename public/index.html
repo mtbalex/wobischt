@@ -98,6 +98,13 @@
 			    console.log('got fingerprint:' + data.fingerprint);
 			    console.log('got heading:' + data.heading);
 			    //console.log("markerIndex:" + markerIndex);
+			    
+			    if (data.heading == 'null')
+			    {
+				console.log("heading == null");
+				data.heading = 0;
+			    }
+
 
 			    //If that fingerprint already had a marker remove it from the map
 			    if (markers[data.fingerprint] !== undefined)
@@ -111,7 +118,10 @@
 				    map: map,
 				    //animation: google.maps.Animation.DROP,
 				    title: data.id_string,
-				    icon: markerIcons[data.fingerprint % (markerIcons.length)]
+				    icon: {
+					path : markerIcons[data.fingerprint % (markerIcons.length)],
+					rotation : data.heading 
+				    }			    
 			    });
 
 			    var infowindow = new google.maps.InfoWindow( {
