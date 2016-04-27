@@ -120,7 +120,8 @@
 				    title: data.id_string,
 				    icon: {
 					//path : markerIcons[data.fingerprint % (markerIcons.length)],
-					path : google.maps.SymbolPath.CIRCLE,
+					path : google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+					scale : 10,
 					rotation : data.heading 
 				    }			    
 			    });
