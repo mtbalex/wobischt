@@ -99,9 +99,10 @@
 			    console.log('got heading:' + data.heading);
 			    //console.log("markerIndex:" + markerIndex);
 			    
+			    //If we don't get a heading like from a PC or mobile device position from WiFi we set it
+			    //to 180 so that the marker points downwards
 			    if (data.heading == null)
 			    {
-			    	console.log("heading == null");
 			    	data.heading = 180;
 			    }
 
