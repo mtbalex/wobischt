@@ -99,10 +99,10 @@
 			    console.log('got heading:' + data.heading);
 			    //console.log("markerIndex:" + markerIndex);
 			    
-			    if (data.heading == 'null')
+			    if (data.heading == null)
 			    {
-				console.log("heading == null");
-				data.heading = 180;
+			    	console.log("heading == null");
+			    	data.heading = 180;
 			    }
 
 
