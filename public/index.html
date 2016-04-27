@@ -119,7 +119,8 @@
 				    //animation: google.maps.Animation.DROP,
 				    title: data.id_string,
 				    icon: {
-					path : markerIcons[data.fingerprint % (markerIcons.length)],
+					//path : markerIcons[data.fingerprint % (markerIcons.length)],
+					path : google.maps.SymbolPath.CIRCLE,
 					rotation : data.heading 
 				    }			    
 			    });
