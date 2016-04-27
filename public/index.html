@@ -102,7 +102,7 @@
 			    if (data.heading == 'null')
 			    {
 				console.log("heading == null");
-				data.heading = 0;
+				data.heading = 180;
 			    }
 
 
@@ -120,7 +120,7 @@
 				    title: data.id_string,
 				    icon: {
 					//path : markerIcons[data.fingerprint % (markerIcons.length)],
-					path : google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+					path : google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
 					scale : 4,
 					rotation : data.heading 
 				    }			    
